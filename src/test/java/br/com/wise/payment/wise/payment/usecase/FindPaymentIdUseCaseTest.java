@@ -7,33 +7,36 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class FindPaymentIdUseCaseTest {
 
     private final PaymentGateway paymentGateway = mock(PaymentGateway.class);
-    private final FindPaymentIdUseCase useCase = new FindPaymentIdUseCase(null, paymentGateway);
+    private final FindPaymentIdUseCase useCase = new FindPaymentIdUseCase(paymentGateway);
 
     @Test
-    void execute_shouldReturnPayment_whenFound() {
-        UUID id = UUID.randomUUID();
-        Payment payment = new Payment(id, BigDecimal.ZERO, null, "0000", "");
-        when(paymentGateway.findPaymentById(id)).thenReturn(payment);
+    void execute_shouldReturnPaymentWhenIdIsValid() {
+        UUID uuid = UUID.randomUUID();
+        Payment payment = new Payment(uuid, BigDecimal.valueOf(100), null, "4111111111111111", null);
 
-        Payment result = useCase.execute(id);
+        when(paymentGateway.findPaymentById(uuid)).thenReturn(payment);
 
-        assertSame(payment, result);
-        verify(paymentGateway).findPaymentById(id);
+        Payment result = useCase.execute(uuid);
+
+        assertThat(result).isSameAs(payment);
+        verify(paymentGateway).findPaymentById(uuid);
     }
 
     @Test
-    void execute_shouldThrow_whenNotFound() {
-        UUID id = UUID.randomUUID();
-        when(paymentGateway.findPaymentById(id)).thenThrow(new RuntimeException("not found"));
+    void execute_shouldReturnNullWhenPaymentNotFound() {
+        UUID uuid = UUID.randomUUID();
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> useCase.execute(id));
-        assertEquals("not found", exception.getMessage());
-        verify(paymentGateway).findPaymentById(id);
+        when(paymentGateway.findPaymentById(uuid)).thenReturn(null);
+
+        Payment result = useCase.execute(uuid);
+
+        assertThat(result).isNull();
+        verify(paymentGateway).findPaymentById(uuid);
     }
 }
