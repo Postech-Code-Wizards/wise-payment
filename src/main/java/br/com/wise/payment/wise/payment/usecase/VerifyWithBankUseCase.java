@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Random;
 
 @Component
-public class VerifyWithBank {
+public class VerifyWithBankUseCase {
     private static final String NO_FUNDS_MESSAGE = "Insufficient Balance for the transaction";
     private static final String CARD_NUMBER_INVALID = "Credit card number do not match any";
 

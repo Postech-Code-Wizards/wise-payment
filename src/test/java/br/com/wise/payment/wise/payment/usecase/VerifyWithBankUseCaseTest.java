@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-class VerifyWithBankTest {
+class VerifyWithBankUseCaseTest {
 
     @Test
     void shouldReturnTrueWhenCardIsValidAndHasSufficientFunds() {
@@ -17,8 +17,8 @@ class VerifyWithBankTest {
         when(payment.getTotalValue()).thenReturn(BigDecimal.valueOf(1));
         when(payment.getCreditCardNumber()).thenReturn("12345678901234");
 
-        VerifyWithBank verifyWithBank = new VerifyWithBank();
-        boolean result = verifyWithBank.execute(payment);
+        VerifyWithBankUseCase verifyWithBankUseCase = new VerifyWithBankUseCase();
+        boolean result = verifyWithBankUseCase.execute(payment);
 
         assertTrue(result);
         verify(payment, never()).messageInformation(anyString());
@@ -30,8 +30,8 @@ class VerifyWithBankTest {
         when(payment.getTotalValue()).thenReturn(BigDecimal.valueOf(100000));
         when(payment.getCreditCardNumber()).thenReturn("12345678901234");
 
-        VerifyWithBank verifyWithBank = new VerifyWithBank();
-        boolean result = verifyWithBank.execute(payment);
+        VerifyWithBankUseCase verifyWithBankUseCase = new VerifyWithBankUseCase();
+        boolean result = verifyWithBankUseCase.execute(payment);
 
         assertFalse(result);
         verify(payment).messageInformation("Insufficient Balance for the transaction");
@@ -43,8 +43,8 @@ class VerifyWithBankTest {
         when(payment.getTotalValue()).thenReturn(BigDecimal.valueOf(1));
         when(payment.getCreditCardNumber()).thenReturn("123");
 
-        VerifyWithBank verifyWithBank = new VerifyWithBank();
-        boolean result = verifyWithBank.execute(payment);
+        VerifyWithBankUseCase verifyWithBankUseCase = new VerifyWithBankUseCase();
+        boolean result = verifyWithBankUseCase.execute(payment);
 
         assertFalse(result);
         verify(payment).messageInformation("Credit card number do not match any");
@@ -56,8 +56,8 @@ class VerifyWithBankTest {
         when(payment.getTotalValue()).thenReturn(BigDecimal.valueOf(100000));
         when(payment.getCreditCardNumber()).thenReturn("123");
 
-        VerifyWithBank verifyWithBank = new VerifyWithBank();
-        boolean result = verifyWithBank.execute(payment);
+        VerifyWithBankUseCase verifyWithBankUseCase = new VerifyWithBankUseCase();
+        boolean result = verifyWithBankUseCase.execute(payment);
 
         assertFalse(result);
         verify(payment).messageInformation("Insufficient Balance for the transaction");
