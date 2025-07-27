@@ -1,6 +1,5 @@
 package br.com.wise.payment.wise.payment.usecase;
 
-import br.com.wise.payment.wise.payment.converter.PaymentConverter;
 import br.com.wise.payment.wise.payment.domain.Payment;
 import br.com.wise.payment.wise.payment.gateway.database.PaymentGateway;
 import lombok.RequiredArgsConstructor;
