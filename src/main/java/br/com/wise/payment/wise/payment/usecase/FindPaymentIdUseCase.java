@@ -11,7 +11,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class FindPaymentIdUseCase {
-    private final PaymentConverter converter;
     private final PaymentGateway paymentGateway;
 
     public Payment execute(UUID uuid) {

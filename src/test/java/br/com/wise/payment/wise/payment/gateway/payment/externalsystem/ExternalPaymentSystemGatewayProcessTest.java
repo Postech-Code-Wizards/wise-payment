@@ -1,4 +1,4 @@
-package br.com.wise.payment.wise.payment.gateway.payment.externalSystem;
+package br.com.wise.payment.wise.payment.gateway.payment.externalsystem;
 
 import br.com.wise.payment.wise.payment.domain.Payment;
 import br.com.wise.payment.wise.payment.domain.Status;
