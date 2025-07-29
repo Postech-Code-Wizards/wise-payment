@@ -24,7 +24,7 @@ class PaymentJpaGatewayTest {
     @Test
     void createProcessAndReturnUUID_success() {
         var input = new PaymentEntity(null,
-                new BigDecimal("50"), null, "4111111111111111", "");
+                new BigDecimal("50"), Status.PROCESSING, "4111111111111111", "");
         var saved = new PaymentEntity(UUID.randomUUID(),
                 new BigDecimal("50"), Status.PROCESSING, "4111111111111111", "");
         var domain = new Payment(saved.getId(), saved.getTotalValue(), saved.getStatus(), saved.getCreditCardNumber(), "");
@@ -42,7 +42,7 @@ class PaymentJpaGatewayTest {
     @Test
     void createProcessAndReturnUUID_invalidEntity_throws() {
         var bad = new PaymentEntity(null,
-                new BigDecimal("50"), Status.PROCESSING, "4111111111111111", "");
+                new BigDecimal("50"), null, "4111111111111111", "");
         assertThatThrownBy(() -> paymentJpaGateway.createProcessAndReturnUUID(bad))
                 .isInstanceOf(PaymentNotFoundException.class)
                 .hasMessageContaining("Payment entity is null");
@@ -85,7 +85,7 @@ class PaymentJpaGatewayTest {
     void updatePaymentAfterProcessing_success() {
         var id = UUID.randomUUID();
         var updateEnt = new PaymentEntity(null,
-                new BigDecimal("30"), null, "2222", "msg");
+                new BigDecimal("30"), Status.PROCESSING, "2222", "msg");
         var existing = new PaymentEntity(id,
                 new BigDecimal("10"), Status.PROCESSING, "2222", "");
         var domain = new Payment(id, existing.getTotalValue(), existing.getStatus(), existing.getCreditCardNumber(), updateEnt.getMessage());
@@ -104,7 +104,7 @@ class PaymentJpaGatewayTest {
 
     @Test
     void updatePaymentAfterProcessing_nullUuid_throws() {
-        var updateEnt = new PaymentEntity(null, BigDecimal.ONE, null, "x", "");
+        var updateEnt = new PaymentEntity(null, BigDecimal.ONE, Status.PROCESSING, "x", "");
         assertThatThrownBy(() -> paymentJpaGateway.updatePaymentAfterProcessing(null, updateEnt))
                 .isInstanceOf(PaymentNotFoundException.class)
                 .hasMessageContaining("UUID is null");
@@ -116,13 +116,13 @@ class PaymentJpaGatewayTest {
         var bad = new PaymentEntity(null, BigDecimal.ONE, Status.PROCESSING, "x", "");
         assertThatThrownBy(() -> paymentJpaGateway.updatePaymentAfterProcessing(id, bad))
                 .isInstanceOf(PaymentNotFoundException.class)
-                .hasMessageContaining("Payment entity is null");
+                .hasMessageContaining("Payment not found for UUID");
     }
 
     @Test
     void updatePaymentAfterProcessing_notFound_throws() {
         var id = UUID.randomUUID();
-        var updateEnt = new PaymentEntity(null, BigDecimal.ONE, null, "x", "");
+        var updateEnt = new PaymentEntity(null, BigDecimal.ONE, Status.PROCESSING, "x", "");
         when(paymentRepository.findById(id)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> paymentJpaGateway.updatePaymentAfterProcessing(id, updateEnt))
                 .isInstanceOf(PaymentNotFoundException.class)

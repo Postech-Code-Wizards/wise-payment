@@ -33,11 +33,11 @@ class PaymentConverterTest {
         var ent = new PaymentEntity(uuid, new BigDecimal("987.65"), Status.PROCESSING, "5555666677778888", "OK");
         var dom = converter.toDomain(ent);
 
-        assertThat(dom.getPaymentId()).isNull();
+        assertThat(dom.getPaymentId()).isEqualTo(uuid);
         assertThat(dom.getTotalValue()).isEqualByComparingTo("987.65");
         assertThat(dom.getStatus()).isEqualTo(Status.PROCESSING);
         assertThat(dom.getCreditCardNumber()).isEqualTo("5555666677778888");
-        assertThat(dom.getMessage()).isNull();
+        assertThat(dom.getMessage()).isEqualTo(ent.getMessage());
     }
 
     @Test

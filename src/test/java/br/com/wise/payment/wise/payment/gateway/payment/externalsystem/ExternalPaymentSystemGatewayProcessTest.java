@@ -20,7 +20,7 @@ class ExternalPaymentSystemGatewayProcessTest {
                 BigDecimal.valueOf(100.00),
                 Status.PROCESSING,
                 "4111111111111111",
-                ""
+                null
         );
 
         assertTrue(gateway.createPaymentRequest(payment));
