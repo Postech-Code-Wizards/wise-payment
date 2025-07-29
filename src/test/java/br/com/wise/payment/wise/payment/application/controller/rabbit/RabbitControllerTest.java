@@ -2,6 +2,7 @@ package br.com.wise.payment.wise.payment.application.controller.rabbit;
 
 import br.com.wise.payment.wise.payment.application.configuration.rabbit.RabbitProducer;
 import br.com.wise.payment.wise.payment.application.dtos.rabbit.PaymentCallback;
+import br.com.wise.payment.wise.payment.domain.Status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -38,7 +41,7 @@ class RabbitControllerTest {
 
     @Test
     void shouldSendPaymentMessage() throws Exception {
-        PaymentCallback message = new PaymentCallback("12345678901234", 1000.0);
+        PaymentCallback message = new PaymentCallback(UUID.randomUUID(), Status.SUCCESS, null);
 
         mockMvc.perform(post("/api/rabbit")
                         .contentType(MediaType.APPLICATION_JSON)
