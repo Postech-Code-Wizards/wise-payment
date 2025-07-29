@@ -1,7 +1,7 @@
 package br.com.wise.payment.wise.payment.application.configuration.rabbit;
 
 
-import br.com.wise.payment.wise.payment.application.dtos.rabbit.PaymentMessageDTO;
+import br.com.wise.payment.wise.payment.application.dtos.rabbit.PaymentCallback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -13,7 +13,7 @@ public class RabbitConsumer {
     private static final String PRODUCT_MESSAGE = "Message produced: ";
 
     @RabbitListener(queues = RabbitConfig.QUEUE_NAME)
-    public void receive(PaymentMessageDTO paymentMessage) {
-        logger.info(PRODUCT_MESSAGE + "{}", paymentMessage);
+    public void receive(PaymentCallback paymentCallback) {
+        logger.info(PRODUCT_MESSAGE + "{}", paymentCallback);
     }
 }

@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
-    public static final String QUEUE_NAME = "wise.product";
-    public static final String EXCHANGE_NAME = "wise.product.exchange";
-    public static final String ROUTING_KEY = "my.routing.key";
+    public static final String QUEUE_NAME = "payment_queue";
+    public static final String EXCHANGE_NAME = "wise.payment";
+    public static final String ROUTING_KEY = "payment.callback";
 
     @Bean
     public Queue queue() {

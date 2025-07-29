@@ -15,10 +15,6 @@ public class Payment {
     private String creditCardNumber;
     private String message;
 
-    public void generateId() {
-        paymentId = UUID.randomUUID();
-    }
-
     public void newStatus(Status status) {
         this.status = status;
     }
