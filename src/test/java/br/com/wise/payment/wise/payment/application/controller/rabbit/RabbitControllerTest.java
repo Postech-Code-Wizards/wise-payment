@@ -1,7 +1,7 @@
 package br.com.wise.payment.wise.payment.application.controller.rabbit;
 
 import br.com.wise.payment.wise.payment.application.configuration.rabbit.RabbitProducer;
-import br.com.wise.payment.wise.payment.application.dtos.rabbit.PaymentMessageDTO;
+import br.com.wise.payment.wise.payment.application.dtos.rabbit.PaymentCallback;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ class RabbitControllerTest {
 
     @Test
     void shouldSendPaymentMessage() throws Exception {
-        PaymentMessageDTO message = new PaymentMessageDTO("12345678901234", 1000.0);
+        PaymentCallback message = new PaymentCallback("12345678901234", 1000.0);
 
         mockMvc.perform(post("/api/rabbit")
                         .contentType(MediaType.APPLICATION_JSON)
