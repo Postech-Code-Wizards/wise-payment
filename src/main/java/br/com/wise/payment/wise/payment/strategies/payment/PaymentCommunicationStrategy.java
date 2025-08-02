@@ -3,6 +3,8 @@ package br.com.wise.payment.wise.payment.strategies.payment;
 import br.com.wise.payment.wise.payment.domain.Payment;
 import br.com.wise.payment.wise.payment.domain.Status;
 import br.com.wise.payment.wise.payment.gateway.payment.ExternalPaymentSystemGateway;
+import br.com.wise.payment.wise.payment.gateway.rabbitmq.CallbackPaymentGateway;
+import br.com.wise.payment.wise.payment.gateway.rabbitmq.dto.CallbackPaymentDTO;
 import br.com.wise.payment.wise.payment.strategies.PaymentStrategy;
 import br.com.wise.payment.wise.payment.usecase.VerifyWithBankUseCase;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +21,20 @@ public class PaymentCommunicationStrategy implements PaymentStrategy {
 
     private final ExternalPaymentSystemGateway externalPaymentSystemGateway;
     private final VerifyWithBankUseCase verifyWithBankUseCase;
+    private final CallbackPaymentGateway callbackPaymentGateway;
 
     @Override
     public Payment processPayment(Payment payment) {
         boolean externalPaymentProcess = externalPaymentSystemGateway.createPaymentRequest(payment);
         if (validatePaymentDataWithBank(payment) && externalPaymentProcess) {
+            CallbackPaymentDTO callbackPaymentDTO = new CallbackPaymentDTO(payment.getPaymentId().toString(), true);
+            callbackPaymentGateway.send(callbackPaymentDTO);
             payment.newStatus(Status.SUCCESS);
             log.info(PAYMENT_SUCCESS);
             return payment;
         }
+        CallbackPaymentDTO callbackPaymentDTO = new CallbackPaymentDTO(payment.getPaymentId().toString(), false);
+        callbackPaymentGateway.send(callbackPaymentDTO);
         log.error(PAYMENT_FAILURE, getClass());
         payment.newStatus(Status.FAILURE_IN_PAYMENT_INFORMATION);
         return payment;

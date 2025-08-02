@@ -3,10 +3,13 @@ package br.com.wise.payment.wise.payment.gateway;
 import br.com.wise.payment.wise.payment.domain.Payment;
 import br.com.wise.payment.wise.payment.domain.Status;
 import br.com.wise.payment.wise.payment.gateway.payment.ExternalPaymentSystemGateway;
+import br.com.wise.payment.wise.payment.gateway.rabbitmq.CallbackPaymentGateway;
 import br.com.wise.payment.wise.payment.strategies.payment.PaymentCommunicationStrategy;
 import br.com.wise.payment.wise.payment.usecase.VerifyWithBankUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -21,13 +24,14 @@ class PaymentCommunicationStrategyTest {
     void setUp() {
         externalPaymentSystemGateway = mock(ExternalPaymentSystemGateway.class);
         verifyWithBankUseCase = mock(VerifyWithBankUseCase.class);
-        paymentStrategy = new PaymentCommunicationStrategy(externalPaymentSystemGateway, verifyWithBankUseCase);
+        CallbackPaymentGateway callbackPaymentGateway = mock(CallbackPaymentGateway.class);
+        paymentStrategy = new PaymentCommunicationStrategy(externalPaymentSystemGateway, verifyWithBankUseCase, callbackPaymentGateway);
     }
 
     @Test
     void deveRetornarStatusSuccess_quandoPagamentoExternoEValidacaoForemTrue() {
         Payment payment = new Payment(
-                null,
+                UUID.randomUUID(),
                 null,
                 null,
                 null,
@@ -46,7 +50,7 @@ class PaymentCommunicationStrategyTest {
     @Test
     void deveRetornarStatusFailure_quandoPagamentoExternoForFalse() {
         Payment payment = new Payment(
-                null,
+                UUID.randomUUID(),
                 null,
                 null,
                 null,
@@ -63,7 +67,7 @@ class PaymentCommunicationStrategyTest {
     @Test
     void deveRetornarStatusFailure_quandoValidacaoComBancoForFalse() {
         Payment payment = new Payment(
-                null,
+                UUID.randomUUID(),
                 null,
                 null,
                 null,
